@@ -6,7 +6,9 @@ dotenv.config();
 const app = express();
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello TypeScript!");
+  return res.status(200).send({
+    response: "Hello Typescript",
+  });
 });
 
 app.listen(process.env.APP_PORT, () => {
