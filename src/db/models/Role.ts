@@ -1,5 +1,5 @@
 import { DataTypes, Model, Optional } from "sequelize";
-const connection = require("../../config/dbConnect");
+import connection from "../../config/dbConnect";
 
 interface RoleAttributes {
   id?: number;
