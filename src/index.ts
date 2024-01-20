@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 
 import dotenv from "dotenv";
 
-import router from "./routes/role.route";
+import RoleRoute from "./routes/role.route";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ app.get("/", (req: Request, res: Response) => {
   });
 });
 
-app.use(router);
+app.use("/role", RoleRoute);
 
 app.listen(process.env.APP_PORT, () => {
   console.log(

@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import Role from "../db/models/Role";
 
+import Helper from "../helpers/Helper";
+
 const getRole = async (req: Request, res: Response): Promise<Response> => {
   try {
     const roles = await Role.findAll({
@@ -9,25 +11,13 @@ const getRole = async (req: Request, res: Response): Promise<Response> => {
       },
     });
 
-    return res.status(200).send({
-      status: 200,
-      message: "Get roles successfully",
-      data: roles,
-    });
+    return res
+      .status(200)
+      .send(Helper.ResponseData(200, "Get role successfully", roles, null));
   } catch (error: any) {
-    if (error != null && error instanceof Error) {
-      res.status(500).send({
-        status: 500,
-        message: error.message,
-        error: error.name,
-      });
-    }
-
-    return res.status(500).send({
-      status: 500,
-      message: "Internal server error",
-      error: "InternalServerError",
-    });
+    return res
+      .status(500)
+      .send(Helper.ResponseData(500, "Internal server error", null, error));
   }
 };
 
@@ -45,25 +35,13 @@ const getRoleById = async (req: Request, res: Response): Promise<Response> => {
       });
     }
 
-    return res.status(200).send({
-      status: 200,
-      message: "Get role by id successfully",
-      data: role,
-    });
+    return res
+      .status(200)
+      .send(Helper.ResponseData(200, "Get role successfully", role, null));
   } catch (error: any) {
-    if (error != null && error instanceof Error) {
-      res.status(500).send({
-        status: 500,
-        message: error.message,
-        error: error.name,
-      });
-    }
-
-    return res.status(500).send({
-      status: 500,
-      message: "Internal server error",
-      error: "InternalServerError",
-    });
+    return res
+      .status(500)
+      .send(Helper.ResponseData(500, "Internal server error", null, error));
   }
 };
 
@@ -84,25 +62,13 @@ const createRole = async (req: Request, res: Response): Promise<Response> => {
       active,
     });
 
-    return res.status(201).send({
-      status: 201,
-      message: "Create role successfully",
-      data: role,
-    });
+    return res
+      .status(201)
+      .send(Helper.ResponseData(201, "Create role successfully", role, null));
   } catch (error: any) {
-    if (error != null && error instanceof Error) {
-      return res.status(500).send({
-        status: 500,
-        message: error.message,
-        errors: error,
-      });
-    }
-
-    return res.status(500).send({
-      status: 500,
-      message: "Internal server error",
-      errors: error,
-    });
+    return res
+      .status(500)
+      .send(Helper.ResponseData(500, "Internal server error", null, error));
   }
 };
 
@@ -126,25 +92,13 @@ const updateRole = async (req: Request, res: Response): Promise<Response> => {
 
     await role.save();
 
-    return res.status(200).send({
-      status: 200,
-      message: "Update role successfully",
-      data: role,
-    });
+    return res
+      .status(200)
+      .send(Helper.ResponseData(200, "Update role successfully", role, null));
   } catch (error: any) {
-    if (error != null && error instanceof Error) {
-      return res.status(500).send({
-        status: 500,
-        message: error.message,
-        errors: error,
-      });
-    }
-
-    return res.status(500).send({
-      status: 500,
-      message: "Internal server error",
-      errors: error,
-    });
+    return res
+      .status(500)
+      .send(Helper.ResponseData(500, "Internal server error", null, error));
   }
 };
 
@@ -163,25 +117,13 @@ const deleteRole = async (req: Request, res: Response): Promise<Response> => {
 
     await role.destroy();
 
-    return res.status(200).send({
-      status: 200,
-      message: "Delete role successfully",
-      data: role,
-    });
+    return res
+      .status(200)
+      .send(Helper.ResponseData(200, "Delete role successfully", null, null));
   } catch (error: any) {
-    if (error != null && error instanceof Error) {
-      return res.status(500).send({
-        status: 500,
-        message: error.message,
-        errors: error,
-      });
-    }
-
-    return res.status(500).send({
-      status: 500,
-      message: "Internal server error",
-      errors: error,
-    });
+    return res
+      .status(500)
+      .send(Helper.ResponseData(500, "Internal server error", null, error));
   }
 };
 
