@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 
 import dotenv from "dotenv";
 
-import router from "./routes/Routes";
+import router from "./routes/role.route";
 
 dotenv.config();
 
