@@ -8,7 +8,7 @@ const ResponseData = (
     const response = {
       status: status,
       message: error.message,
-      errors: error.stack,
+      errors: error,
       data: null,
     };
 
