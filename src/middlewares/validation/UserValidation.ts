@@ -47,7 +47,7 @@ const RegisterValidation = async (
       };
       return res
         .status(400)
-        .send(Helper.ResponseData(400, "BadRequest", null, errorData));
+        .send(Helper.ResponseData(400, "Bad Request", errorData, null));
     }
     next();
   } catch (error: any) {
