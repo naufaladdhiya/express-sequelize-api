@@ -1,4 +1,7 @@
 import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 interface UserData {
   name: string | null;
@@ -42,7 +45,7 @@ const GenerateToken = (data: any): string => {
 
 const GenerateRefreshToken = (data: any): string => {
   const token = jwt.sign(data, process.env.JWT_REFRESH_TOKEN as string, {
-    expiresIn: "7d",
+    expiresIn: "1d",
   });
 
   return token;

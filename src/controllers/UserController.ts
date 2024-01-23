@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import PasswordHelper from "../helpers/PasswordHelper";
 import User from "../db/models/User";
 import Helper from "../helpers/Helper";
+import Role from "../db/models/Role";
 
 const registerUser = async (req: Request, res: Response): Promise<Response> => {
   try {
@@ -88,4 +89,112 @@ const loginUser = async (req: Request, res: Response): Promise<Response> => {
   }
 };
 
-export default { registerUser, loginUser };
+const getRefreshToken = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const refreshToken = req.cookies?.refreshToken;
+
+    if (!refreshToken)
+      return res
+        .status(401)
+        .send(Helper.ResponseData(401, "Unauthorized", null, null));
+
+    const decodedUser = Helper.ExtractRefreshToken(refreshToken);
+
+    if (!decodedUser)
+      return res
+        .status(401)
+        .send(Helper.ResponseData(401, "Unauthorized", null, null));
+
+    const token = Helper.GenerateToken({
+      name: decodedUser.name,
+      email: decodedUser.email,
+      roleId: decodedUser.roleId,
+      verified: decodedUser.verified,
+      active: decodedUser.active,
+    });
+
+    const resultUser = {
+      name: decodedUser.name,
+      email: decodedUser.email,
+      roleId: decodedUser.roleId,
+      verified: decodedUser.verified,
+      active: decodedUser.active,
+      token: token,
+    };
+
+    return res
+      .status(200)
+      .send(
+        Helper.ResponseData(200, "Refresh token success", resultUser, null)
+      );
+  } catch (error) {
+    return res.status(500).send(Helper.ResponseData(500, "", error, error));
+  }
+};
+
+const getUserDetail = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  try {
+    const email = res.locals.userEmail;
+
+    if (!email)
+      return res
+        .status(401)
+        .send(Helper.ResponseData(401, "Unauthorized", null, null));
+
+    const user = await User.findOne({
+      where: { email: email },
+      include: { model: Role, attributes: ["id", "roleName"] },
+    });
+
+    if (!user)
+      return res
+        .status(404)
+        .send(Helper.ResponseData(404, "User not found", null, null));
+
+    user.password = "";
+    user.accessToken = "";
+
+    return res
+      .status(200)
+      .send(Helper.ResponseData(200, "User found", user, null));
+  } catch (error) {
+    return res.status(500).send(Helper.ResponseData(500, "", error, error));
+  }
+};
+
+const logoutUser = async (req: Request, res: Response): Promise<Response> => {
+  try {
+    const email = res.locals.userEmail;
+
+    const user = await User.findOne({ where: { email: email } });
+
+    if (!user) {
+      res.clearCookie("refreshToken");
+      return res
+        .status(200)
+        .send(Helper.ResponseData(200, "Logout success", null, null));
+    }
+
+    await user.update({ accessToken: null }, { where: { email: email } });
+    res.clearCookie("refreshToken");
+    return res
+      .status(200)
+      .send(Helper.ResponseData(200, "Logout success", null, null));
+  } catch (error) {
+    return res.status(500).send(Helper.ResponseData(500, "", error, error));
+  }
+};
+
+export default {
+  registerUser,
+  loginUser,
+  getRefreshToken,
+  getUserDetail,
+  logoutUser,
+};

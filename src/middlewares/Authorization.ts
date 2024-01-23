@@ -12,6 +12,13 @@ const Authenticated = (req: Request, res: Response, next: NextFunction) => {
         .send(Helper.ResponseData(401, "Unauthorized", null, null));
 
     const result = Helper.ExtractToken(token!);
+
+    if (!result)
+      return res
+        .status(401)
+        .send(Helper.ResponseData(401, "Unauthorized", null, null));
+
+    res.locals.userEmail = result?.email;
     next();
   } catch (error: any) {
     return res.status(500).send(Helper.ResponseData(500, "", error, error));
