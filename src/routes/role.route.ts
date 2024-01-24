@@ -5,9 +5,24 @@ import Authorization from "../middlewares/Authorization";
 const RoleRoute = express.Router();
 
 RoleRoute.get("/", Authorization.Authenticated, RoleController.getRole);
-RoleRoute.post("/", RoleController.createRole);
-RoleRoute.get("/:id", RoleController.getRoleById);
-RoleRoute.put("/:id", RoleController.updateRole);
-RoleRoute.delete("/:id", RoleController.deleteRole);
+RoleRoute.get("/:id", Authorization.Authenticated, RoleController.getRoleById);
+RoleRoute.post(
+  "/",
+  Authorization.Authenticated,
+  Authorization.AdminRole,
+  RoleController.createRole
+);
+RoleRoute.put(
+  "/:id",
+  Authorization.Authenticated,
+  Authorization.AdminRole,
+  RoleController.updateRole
+);
+RoleRoute.delete(
+  "/:id",
+  Authorization.Authenticated,
+  Authorization.SuperAdminRole,
+  RoleController.deleteRole
+);
 
 export default RoleRoute;
