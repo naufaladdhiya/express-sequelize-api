@@ -1,11 +1,13 @@
 import express from "express";
 import MasterMenuController from "../controllers/MasterMenuController";
 import Authorization from "../middlewares/Authorization";
+import MenuValidation from "../middlewares/validation/MenuValidation";
 
 const MasterMenuRoute = express.Router();
 
 MasterMenuRoute.post(
   "/",
+  MenuValidation.createMenuValidation,
   Authorization.Authenticated,
   Authorization.AdminRole,
   MasterMenuController.createMenu

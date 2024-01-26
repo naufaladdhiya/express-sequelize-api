@@ -1,11 +1,13 @@
 import express from "express";
 import SubMenuController from "../controllers/SubMenuController";
 import Authorization from "../middlewares/Authorization";
+import MenuValidation from "../middlewares/validation/MenuValidation";
 
 const SubMenuRoute = express.Router();
 
 SubMenuRoute.post(
   "/",
+  MenuValidation.createSubMenuValidation,
   Authorization.Authenticated,
   Authorization.AdminRole,
   SubMenuController.createSubMenu
